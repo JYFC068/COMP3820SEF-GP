@@ -1,37 +1,31 @@
 package com.group.onlinecourse.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
 
 @Entity
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "VOTES")
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    private Poll poll;
-
-    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    private PollOption option;
+    @JoinColumn(name = "poll_id")
+    private Poll poll;
 
-    private LocalDateTime timestamp = LocalDateTime.now();
+    @ManyToOne
+    @JoinColumn(name = "option_id")
+    private PollOption pollOption;
 
-    public Long getId() {return id;}
-    public void setId(Long id) {this.id = id;}
-
-    public Poll getPoll() {return poll;}
-    public void setPoll(Poll poll) {this.poll = poll;}
-
-    public User getUser() {return user;}
-    public void setUser(User user) {this.user = user;}
-
-    public PollOption getOption() {return option;}
-    public void setOption(PollOption option) {this.option = option;}
-
-    public LocalDateTime getTimestamp() {return timestamp;}
-    public void setTimestamp(LocalDateTime timestamp) {this.timestamp = timestamp;}
+    private Date timestamp = new Date();
 }

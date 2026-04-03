@@ -1,29 +1,24 @@
 package com.group.onlinecourse.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "POLL_Options")
 public class PollOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "OPTION_TEXT")
     private String optionText;
-    private int voteCount;
+    @Column(name = "VOTE_COUNT")
+    private int voteCount ;
 
     @ManyToOne
     @JoinColumn(name = "poll_id")
     private Poll poll;
-
-    public Long getId() {return id;}
-    public void setId(Long id) {this.id = id;}
-
-    public String getOptionText() {return optionText;}
-    public void setOptionText(String optionText) {this.optionText = optionText;}
-
-    public int getVoteCount() {return voteCount;}
-    public void setVoteCount(int voteCount) {this.voteCount = voteCount;}
-
-    public Poll getPoll() {return poll;}
-    public void setPoll(Poll poll) {this.poll = poll;}
 }

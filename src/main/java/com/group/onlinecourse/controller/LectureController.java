@@ -31,7 +31,7 @@ public class LectureController {
     @GetMapping("/lecture/{id}")
     public String lecturePage(@PathVariable Long id, Model model) {
         Lecture lecture = lectureRepository.findById(id).orElse(null);
-        List<Comment> comments = commentRepository.findAll();
+        List<Comment> comments = commentRepository.findByLecture(lecture);
         model.addAttribute("lecture", lecture);
         model.addAttribute("comments", comments);
         return "lecture";

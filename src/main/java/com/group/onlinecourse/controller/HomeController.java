@@ -14,6 +14,7 @@ import java.util.List;
 
 @Controller
 public class HomeController {
+
     private final LectureRepository lectureRepository;
     private final PollRepository pollRepository;
     private final PollOptionRepository pollOptionRepository;
@@ -29,12 +30,11 @@ public class HomeController {
     @GetMapping("/")
     public String index(Model model) {
         List<Lecture> lectures = lectureRepository.findAll();
-        Poll poll = pollRepository.findById(1L).orElse(null);
-        List<PollOption> pollOptions = pollOptionRepository.findByPollId(1L);
+        List<Poll> polls = pollRepository.findAll();
 
         model.addAttribute("lectures", lectures);
-        model.addAttribute("poll", poll);
-        model.addAttribute("pollOptions", pollOptions);
+        model.addAttribute("polls", polls);
+        model.addAttribute("pollOptions", pollOptionRepository.findAll());
         return "index";
     }
 }

@@ -1,15 +1,12 @@
 package com.group.onlinecourse.controller;
 
-import com.group.onlinecourse.entity.PollOption;
-import com.group.onlinecourse.entity.User;
-import com.group.onlinecourse.entity.Vote;
-import com.group.onlinecourse.repository.PollOptionRepository;
-import com.group.onlinecourse.repository.UserRepository;
-import com.group.onlinecourse.repository.VoteRepository;
+import com.group.onlinecourse.entity.*;
+import com.group.onlinecourse.repository.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
 
 @Controller
 public class VoteController {
@@ -27,21 +24,34 @@ public class VoteController {
 
     @PostMapping("/vote")
     public String submitVote(@RequestParam Long optionId) {
-        PollOption option = pollOptionRepository.findById(optionId).orElse(null);
-        if (option != null) {
-            option.setVoteCount(option.getVoteCount() + 1);
-            pollOptionRepository.save(option);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
 
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            String username = auth.getName();
-            User user = userRepository.findByUsername(username);
+        PollOption selectedOption = pollOptionRepository.findById(optionId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid option"));
+        Poll poll = selectedOption.getPoll();
 
-            Vote vote = new Vote();
-            vote.setPoll(option.getPoll());
-            vote.setOption(option);
-            vote.setUser(user);
+        Optional<Vote> existingVote = voteRepository.findByPollAndUser(poll, user);
+
+        if (existingVote.isPresent()) {
+            PollOption oldOption = existingVote.get().getPollOption();
+            oldOption.setVoteCount(Math.max(0, oldOption.getVoteCount() - 1));
+            pollOptionRepository.save(oldOption);
+
+            Vote vote = existingVote.get();
+            vote.setPollOption(selectedOption);
             voteRepository.save(vote);
+        } else {
+            Vote newVote = new Vote();
+            newVote.setPoll(poll);
+            newVote.setUser(user);
+            newVote.setPollOption(selectedOption);
+            voteRepository.save(newVote);
         }
-        return "redirect:/";
+
+        selectedOption.setVoteCount(selectedOption.getVoteCount() + 1);
+        pollOptionRepository.save(selectedOption);
+
+        return "redirect:/poll/" + poll.getId();
     }
 }
