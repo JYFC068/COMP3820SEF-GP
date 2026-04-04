@@ -1,1 +1,0 @@
-# COMP3820SEF-GP
