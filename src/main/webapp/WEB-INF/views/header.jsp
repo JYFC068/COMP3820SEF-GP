@@ -97,6 +97,8 @@
             <a href="/voteHistory" class="nav-item">My Votes</a>
             <a href="/commentHistory" class="nav-item">My Comments</a>
 
+            <a href="/profile" class="nav-item">Profile</a>
+
             <sec:authorize access="hasRole('TEACHER')">
                 <a href="/admin/users" class="nav-item nav-admin">Manage Users</a>
                 <a href="/admin/lectures" class="nav-item nav-admin">Manage Lectures</a>
