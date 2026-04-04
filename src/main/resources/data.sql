@@ -1,6 +1,8 @@
 INSERT INTO users (username, password, role, full_name, email, phone)
 VALUES ('teacher1', '11223344', 'TEACHER', 'Chan', 'chan@hkmu.edu.hk', '12345678'),
-       ('student1', '22446688', 'STUDENT', 'Yung', 'Yung@hkmu.edu.hk', '87654321');
+       ('student1', '22446688', 'STUDENT', 'Yung', 'Yung@hkmu.edu.hk', '87654321'),	
+		('Lee123', 'lee1234', 'TEACHER', 'Leeleelee', 'lee809@hkmu.edu.hk', '24681234'),
+		('Yung321', 'yung1410', 'STUDENT', 'YungTC', 'YTC@hkmu.edu.hk', '97865342');
 
 INSERT INTO lectures (title, summary, file_path)
 VALUES ('Lecture 1: Overview of web applications', 'Introduction to web applications', '/files/L1.pdf'),
