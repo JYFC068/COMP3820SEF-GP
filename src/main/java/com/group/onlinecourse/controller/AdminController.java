@@ -92,13 +92,23 @@ public class AdminController {
     @PostMapping("/lectures/add")
     public String addLecture(@RequestParam String title,
                              @RequestParam String summary,
-                             @RequestParam("file") MultipartFile file) throws IOException {
+                             @RequestParam(value = "file", required = false) MultipartFile file) {
 
         Lecture lecture = new Lecture();
         lecture.setTitle(title);
         lecture.setSummary(summary);
-        lecture.setFileName(file.getOriginalFilename());
-        lecture.setFileContent(file.getBytes());
+
+        if (file != null && !file.isEmpty()) {
+            try {
+                lecture.setFileName(file.getOriginalFilename());
+                lecture.setFileContent(file.getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            lecture.setFileName(null);
+            lecture.setFileContent(null);
+        }
 
         lectureRepository.save(lecture);
         return "redirect:/admin/lectures";

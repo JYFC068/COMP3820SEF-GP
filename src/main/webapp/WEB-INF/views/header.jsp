@@ -80,6 +80,28 @@
     .nav-register:hover {
         background-color: #0056b3;
     }
+
+    .nav-user {
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95em;
+        padding: 8px 15px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: #e7f3ff;
+        color: #007bff;
+        border: 1px solid #cce5ff;
+        transition: all 0.2s ease;
+    }
+
+    .nav-user:hover {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+        box-shadow: 0 2px 4px rgba(0,123,255,0.2);
+    }
 </style>
 
 <nav class="navbar">
@@ -94,10 +116,14 @@
         </sec:authorize>
 
         <sec:authorize access="isAuthenticated()">
+            <a href="/profile" class="nav-user" title="Edit Profile">
+                <span style="font-size: 1.1em;">👤</span>
+                <sec:authentication property="principal.username" />
+            </a>
+
+
             <a href="/voteHistory" class="nav-item">My Votes</a>
             <a href="/commentHistory" class="nav-item">My Comments</a>
-
-            <a href="/profile" class="nav-item">Profile</a>
 
             <sec:authorize access="hasRole('TEACHER')">
                 <a href="/admin/users" class="nav-item nav-admin">Manage Users</a>

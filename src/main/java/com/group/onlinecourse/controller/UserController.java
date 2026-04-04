@@ -2,54 +2,53 @@ package com.group.onlinecourse.controller;
 
 import com.group.onlinecourse.entity.User;
 import com.group.onlinecourse.repository.UserRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import java.security.Principal;
 
 @Controller
 public class UserController {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    // Constructor injection matching your VoteController style
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    // Displays the profile update page
     @GetMapping("/profile")
-    public String showProfile(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(auth.getName());
+    public String showProfile(Model model, Principal principal) {
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username);
         model.addAttribute("user", user);
-        return "profile"; // Refers to WEB-INF/views/profile.jsp
+        return "profile";
     }
 
-    // Processes the update request
     @PostMapping("/profile/update")
-    public String updateProfile(@ModelAttribute("user") User updatedData) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User existingUser = userRepository.findByUsername(auth.getName());
+    public String updateProfile(@RequestParam String fullName,
+                                @RequestParam String email,
+                                @RequestParam String phone,
+                                @RequestParam(required = false) String password,
+                                Principal principal) {
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username);
 
-        if (existingUser != null) {
-            // Update only allowed fields as per requirements
-            existingUser.setFullName(updatedData.getFullName());
-            existingUser.setEmail(updatedData.getEmail());
-            existingUser.setPhone(updatedData.getPhone());
+        if (user != null) {
+            user.setFullName(fullName);
+            user.setEmail(email);
+            user.setPhone(phone);
 
-            // Password update is optional but common;
-            // ensure you encode it if your system uses password encoding
-            if (updatedData.getPassword() != null && !updatedData.getPassword().isEmpty()) {
-                existingUser.setPassword(updatedData.getPassword());
+            // 只有填寫新密碼才加密更新
+            if (password != null && !password.trim().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(password));
             }
-
-            userRepository.save(existingUser);
+            userRepository.save(user);
         }
-
-        return "redirect:/profile?success";
+        return "redirect:/profile?success=true";
     }
 }

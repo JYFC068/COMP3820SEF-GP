@@ -42,7 +42,7 @@
 
         <div class="form-group">
             <label>Upload File:</label>
-            <input type="file" name="file" required style="padding: 3px;">
+            <input type="file" name="file" style="padding: 3px;">
         </div>
 
         <button type="submit">Upload Material</button>
