@@ -121,9 +121,8 @@
                 <sec:authentication property="principal.username" />
             </a>
 
-
-            <a href="/voteHistory" class="nav-item">My Votes</a>
-            <a href="/commentHistory" class="nav-item">My Comments</a>
+            <a href="/voteHistory" class="nav-item">All Votes</a>
+            <a href="/commentHistory" class="nav-item">All Comments</a>
 
             <sec:authorize access="hasRole('TEACHER')">
                 <a href="/admin/users" class="nav-item nav-admin">Manage Users</a>

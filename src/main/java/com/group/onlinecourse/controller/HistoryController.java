@@ -29,24 +29,18 @@ public class HistoryController {
     }
 
     @GetMapping("/voteHistory")
-    public String voteHistory(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        User user = userRepository.findByUsername(username);
+    public String showAllVoteHistory(Model model) {
+        List<Vote> allVotes = voteRepository.findAll();
 
-        List<Vote> votes = voteRepository.findByUser(user);
-        model.addAttribute("votes", votes);
+        model.addAttribute("votes", allVotes);
         return "voteHistory";
     }
 
     @GetMapping("/commentHistory")
-    public String commentHistory(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        User user = userRepository.findByUsername(username);
+    public String showAllCommentHistory(Model model) {
+        List<Comment> allComments = commentRepository.findAll();
 
-        List<Comment> comments = commentRepository.findByUser(user);
-        model.addAttribute("comments", comments);
+        model.addAttribute("comments", allComments);
         return "commentHistory";
     }
 }
