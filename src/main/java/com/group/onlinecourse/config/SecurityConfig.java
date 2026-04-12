@@ -29,7 +29,6 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // 臨時讓全部頁面都可以訪問（徹底解決 loop）
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
