@@ -43,7 +43,6 @@ public class UserController {
             user.setEmail(email);
             user.setPhone(phone);
 
-            // 只有填寫新密碼才加密更新
             if (password != null && !password.trim().isEmpty()) {
                 user.setPassword(passwordEncoder.encode(password));
             }
